@@ -1,2 +1,4 @@
-twitter/*
+twitter/credentials.py
 !twitter/sample_credentials.py
+
+__pycache__/
