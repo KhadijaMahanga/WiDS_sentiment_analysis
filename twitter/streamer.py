@@ -13,18 +13,18 @@ class TwitterStreamer():
 
     def stream_tweets(self, fetched_tweets_filename, hash_tag_list):
         # This handles Twitter authetification and the connection to Twitter Streaming API
-        listener = StdOutListener(fetched_tweets_filename)
-        
+        listener = TwitterListener(fetched_tweets_filename)
+
         auth = OAuthHandler(credentials.CONSUMER_KEY, credentials.CONSUMER_SECRET)
         auth.set_access_token(credentials.ACCESS_TOKEN, credentials.ACCESS_TOKEN_SECRET)
         stream = Stream(auth, listener)
 
         # filtering twitter Streams to capture tweets by only keywords 
-        stream.filter(track=hash_tag_list)
+        stream.filter(track=hash_tag_list,  is_async=True)
 
 
 
-class StdOutListener(StreamListener):
+class TwitterListener(StreamListener):
     """
     This is a basic listener that just prints received tweets to stdout.
     """
@@ -44,6 +44,9 @@ class StdOutListener(StreamListener):
           
 
     def on_error(self, status):
+        if status == 420:
+            #returning False in on_error disconnects the stream
+            return False
         print(status)
 
  
